@@ -26,9 +26,16 @@ public class DeveloperController : Controller
     [HttpGet("/Developers")]
     [ProducesResponseType(typeof(List<DeveloperModel>), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    public async Task<Results<Ok<List<DeveloperModel>>, NotFound>> GetDeveloperList()
+    public async Task<Results<Ok<List<DeveloperModel>>, NotFound>> GetDeveloperList(
+        [FromQuery] PagingParameters? pagingParameters = null
+        )
     {
-        var developerList = await _developerService.GetDeveloperList();
+        var developerList = pagingParameters != null ?
+            await _developerService.GetDeveloperList(
+                pagingParameters.PageSize.GetValueOrDefault(pagingParameters.DefaultPageSize),
+                pagingParameters.PageNumber.GetValueOrDefault(pagingParameters.DefaultPageNumber)
+                )
+            : await _developerService.GetDeveloperList();
         if (developerList != null && developerList.Count > 0)
         {
             var result = developerList.Select(DeveloperModel.From).ToList();

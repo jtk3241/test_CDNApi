@@ -43,7 +43,7 @@ public partial class DataAccess : IDataAccess
         }
     }
 
-    public async Task<List<DeveloperCore>?> GetDeveloperList()
+    public async Task<List<DeveloperCore>?> GetDeveloperList(int PageSize = 100, int PageNumber = 0)
     {
         var results = await _context.TDevelopers
             .Select(x => new DeveloperCore
@@ -57,6 +57,9 @@ public partial class DataAccess : IDataAccess
                 SkillSet = x.Skillset,
                 UpdatedOn = x.Updatedon
             })
+            .OrderBy(y => y.Name)
+            .Skip(PageNumber * PageSize)
+            .Take(PageSize)
             .AsNoTracking()
             .ToListAsync();
         return results;

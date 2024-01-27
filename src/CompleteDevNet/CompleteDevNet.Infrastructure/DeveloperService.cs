@@ -19,9 +19,9 @@ public class DeveloperService : IDeveloperService
         _logger = logger;
     }
     
-    public async Task<List<DeveloperCore>?> GetDeveloperList()
+    public async Task<List<DeveloperCore>?> GetDeveloperList(int PageSize = 100, int PageNumber = 0)
     {
-        var objReturn = await _dataAccess.GetDeveloperList();
+        var objReturn = await _dataAccess.GetDeveloperList(PageSize, PageNumber);
         //*** extra processing here
         return objReturn;
     }
