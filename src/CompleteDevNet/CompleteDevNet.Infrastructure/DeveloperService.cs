@@ -25,4 +25,35 @@ public class DeveloperService : IDeveloperService
         //*** extra processing here
         return objReturn;
     }
+
+    public async Task<DeveloperCore?> RegisterDeveloper(DeveloperCore developer)
+    {
+        _logger.Debug($"RegisterDeveloper start. name:{developer.Name}, email:{developer.Email}.");
+        //*** validations
+        if (string.IsNullOrWhiteSpace(developer.Name))
+        {
+            throw new ArgumentException("Developer name cannot be blank.");
+        }
+
+        if (string.IsNullOrWhiteSpace(developer.Email))
+        {
+            throw new ArgumentException("Developer email cannot be blank.");
+        }
+
+        if (!CommonUtil.IsValidEmailAddress(developer.Email))
+        {
+            throw new ArgumentException("Developer email is invalid.");
+        }
+
+        bool bEmailExistsInDB = await _dataAccess.CheckDeveloperEmailExists(developer.Email);
+        if (bEmailExistsInDB)
+        {
+            throw new ArgumentException("Developer email already registered.");
+        }
+
+        var objReturn = await _dataAccess.AddDeveloper(developer);
+
+        _logger.Debug($"RegisterDeveloper end. name:{developer.Name}, email:{developer.Email}.");
+        return objReturn;
+    }
 }

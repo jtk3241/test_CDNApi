@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Update;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,23 @@ public partial class DataAccess : IDataAccess
         _context = context;
     }
 
+    public virtual async Task<decimal> GetNextIdAsync(string sequence)
+    {
+        _logger.Debug($"GetNextIdAsync start. sequence:{sequence}.");
+        using (var cmd = _context.Database.GetDbConnection().CreateCommand())
+        {
+            if (cmd.Connection?.State == ConnectionState.Closed)
+            {
+                cmd.Connection.Open();
+            }
+            cmd.CommandText = $"select {sequence}.nextval from dual";
+            var obj = await cmd.ExecuteScalarAsync();
+            var result = Convert.ToDecimal(obj ?? 0);
+            _logger.Debug($"GetNextIdAsync end. sequence:{sequence}.");
+            return result;
+        }
+    }
+
     public async Task<List<DeveloperCore>?> GetDeveloperList()
     {
         var results = await _context.TDevelopers
@@ -41,5 +59,37 @@ public partial class DataAccess : IDataAccess
             .AsNoTracking()
             .ToListAsync();
         return results;
+    }
+
+    public async Task<bool> CheckDeveloperEmailExists(string email)
+    {
+        var bResult = await _context.TDevelopers
+            .Where(x => x.Email.ToLower() == email.ToLower())
+            .AnyAsync();
+        return bResult;
+    }
+
+    public async Task<DeveloperCore> AddDeveloper(DeveloperCore developer)
+    {
+        developer.IdentGuid = Guid.NewGuid();
+        developer.Id = Convert.ToInt64(await GetNextIdAsync("s_developer"));
+
+        TDeveloper objNewDev = new TDeveloper()
+        {
+            Id = developer.Id,
+            Identguid = developer.IdentGuid,
+            Name = developer.Name,
+            Email = developer.Email,
+            Hobby = developer.Hobby,
+            Phonenumber = developer.PhoneNumber,
+            Skillset = developer.SkillSet,
+            Updatedon = DateTime.Now
+        };
+        await _context.TDevelopers.AddAsync(objNewDev);
+        await _context.SaveChangesAsync();
+
+        developer.UpdatedOn = objNewDev.Updatedon;
+
+        return developer;
     }
 }

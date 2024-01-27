@@ -18,4 +18,6 @@ public partial class TDeveloper
     public string? Skillset { get; set; }
 
     public string? Hobby { get; set; }
+
+    public DateTime? Updatedon { get; set; }
 }

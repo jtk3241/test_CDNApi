@@ -1,5 +1,4 @@
-﻿using CompleteDevNet.API.Models.SystemRelated;
-using CompleteDevNet.Core.Interfaces;
+﻿using CompleteDevNet.Core.Interfaces;
 using CompleteDevNet.Infrastructure;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Net;

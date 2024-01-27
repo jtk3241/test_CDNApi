@@ -18,10 +18,13 @@ public class OracleDatabaseService : IDatabaseService
 
         modelBuilder.Entity<TDeveloper>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("T_DEVELOPER");
+            entity.HasKey(e => e.Id).HasName("PK_DEVELOPER");
 
+            entity.ToTable("T_DEVELOPER");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("NUMBER")
+                .HasColumnName("ID");
             entity.Property(e => e.Email)
                 .HasMaxLength(255)
                 .IsUnicode(false)
@@ -29,9 +32,6 @@ public class OracleDatabaseService : IDatabaseService
             entity.Property(e => e.Hobby)
                 .IsUnicode(false)
                 .HasColumnName("HOBBY");
-            entity.Property(e => e.Id)
-                .HasColumnType("NUMBER")
-                .HasColumnName("ID");
             entity.Property(e => e.Identguid).HasColumnName("IDENTGUID");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
@@ -44,6 +44,9 @@ public class OracleDatabaseService : IDatabaseService
             entity.Property(e => e.Skillset)
                 .IsUnicode(false)
                 .HasColumnName("SKILLSET");
+            entity.Property(e => e.Updatedon)
+                .HasColumnType("DATE")
+                .HasColumnName("UPDATEDON");
         });
         modelBuilder.HasSequence("S_DEVELOPER");
     }

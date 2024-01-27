@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CompleteDevNet.API.Models.SystemRelated;
+namespace CompleteDevNet.API.Models;
 
 public class UserLoginModel
 {

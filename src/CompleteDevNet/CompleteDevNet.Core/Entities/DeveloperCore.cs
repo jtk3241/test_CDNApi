@@ -15,5 +15,7 @@ namespace CompleteDevNet.Core.Entities
         public string? PhoneNumber { get; set; }
         public string? SkillSet { get; set; }
         public string? Hobby { get; set; }
+        public DateTime? UpdatedOn { get; set; }
+        public long? UpdatedBy { get; set; }
     }
 }

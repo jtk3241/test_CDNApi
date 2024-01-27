@@ -10,4 +10,5 @@ namespace CompleteDevNet.Core.Interfaces;
 public interface IDeveloperService
 {
     Task<List<DeveloperCore>?> GetDeveloperList();
+    Task<DeveloperCore?> RegisterDeveloper(DeveloperCore developer);
 }
