@@ -1,0 +1,1 @@
+Scaffold-DbContext "Server=MYKULL23110145;Database=CDNDB;User Id=cdnsys;Password=cdnsys;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir DataSQLServer -t T_DEVELOPER -f

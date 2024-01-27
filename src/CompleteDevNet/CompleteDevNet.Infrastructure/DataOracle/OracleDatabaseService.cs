@@ -1,5 +1,4 @@
-﻿using CompleteDevNet.Infrastructure.DataOracle;
-using CompleteDevNet.Infrastructure.Interfaces;
+﻿using CompleteDevNet.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CompleteDevNet.Infrastructure;
+namespace CompleteDevNet.Infrastructure.DataOracle;
 
 public class OracleDatabaseService : IDatabaseService
 {

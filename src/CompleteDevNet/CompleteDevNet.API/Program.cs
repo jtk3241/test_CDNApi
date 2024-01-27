@@ -5,6 +5,7 @@ using CompleteDevNet.Core.Interfaces;
 using CompleteDevNet.Core.SystemRelated;
 using CompleteDevNet.Infrastructure;
 using CompleteDevNet.Infrastructure.DataOracle;
+using CompleteDevNet.Infrastructure.DataSQLServer;
 using CompleteDevNet.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -30,14 +31,18 @@ builder.Configuration.GetSection("DatabaseSettings").Bind(databaseSettings);
 if (databaseSettings.DatabaseProvider.ToLower() == "oracle")
 {
     builder.Services.AddTransient<IDatabaseService, OracleDatabaseService>();
-    builder.Services.AddDbContext<CDNContext>(c =>
+    builder.Services.AddDbContext<CompleteDevNet.Infrastructure.DataOracle.CDNContext>(c =>
         c.UseOracle(builder.Configuration.GetConnectionString("OracleConnectionString"))
     );
     builder.Services.AddTransient<IDataAccess, CompleteDevNet.Infrastructure.DataOracle.DataAccess>();
 }
 else if (databaseSettings.DatabaseProvider.ToLower() == "sql")
 {
-
+    builder.Services.AddTransient<IDatabaseService, SQLServerDatabaseService>();
+    builder.Services.AddDbContext<CompleteDevNet.Infrastructure.DataSQLServer.CDNContext>(c =>
+        c.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnectionString"))
+    );
+    builder.Services.AddTransient<IDataAccess, CompleteDevNet.Infrastructure.DataSQLServer.DataAccess>();
 }
 
 builder.Services.AddControllers();
