@@ -4,7 +4,7 @@ using ILogger = Serilog.ILogger;
 
 namespace CompleteDevNet.API.Middleware;
 
-public class ExceptionMiddleware
+public class ExceptionMiddleware : IMiddleware
 {
     private readonly ILogger _logger;
 

@@ -1,4 +1,6 @@
+using CompleteDevNet.API;
 using CompleteDevNet.API.Extensions;
+using CompleteDevNet.API.Middleware;
 using CompleteDevNet.Core.Interfaces;
 using CompleteDevNet.Core.SystemRelated;
 using CompleteDevNet.Infrastructure;
@@ -42,6 +44,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddTransient<IAccountService, AccountService>();
 builder.Services.AddTransient<IDeveloperService, DeveloperService>();
+builder.Services.AddTransient<ExceptionMiddleware>();
 
 builder.Services.AddJWTTokenServices(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
@@ -80,6 +83,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseGlobalExceptionHandler();
 
 app.UseAuthorization();
 
