@@ -22,6 +22,11 @@ public class DeveloperController : Controller
         _developerService = developerService;
     }
 
+    /// <summary>
+    /// Get list of registered developers.
+    /// </summary>
+    /// <param name="pagingParameters">Provide paging parameters. Page number starts from 0. If none are provided, defaults will be used (pagesize = 200, pagenumber = 0) </param>
+    /// <returns></returns>
     [AllowAnonymous]
     [HttpGet("/Developers")]
     [ProducesResponseType(typeof(List<DeveloperModel>), (int)HttpStatusCode.OK)]
@@ -47,6 +52,14 @@ public class DeveloperController : Controller
         }
     }
 
+    /// <summary>
+    /// Register new developer.
+    /// </summary>
+    /// <remarks>
+    /// Email used for registration a new developer should be unique.
+    /// </remarks>
+    /// <param name="developer"></param>
+    /// <returns>Registered developer with identity-ID</returns>
     [HttpPost("/Developers")]
     [ProducesResponseType(typeof(DeveloperModel), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -79,6 +92,13 @@ public class DeveloperController : Controller
         }
     }
 
+    /// <summary>
+    /// Update developer details.
+    /// </summary>
+    /// <remarks>Note: developers email can be changed, but it must be unique across all developers.</remarks>
+    /// <param name="IdentGuid">Developer's identity Guid.</param>
+    /// <param name="developer">Developer details.</param>
+    /// <returns>Updated developer details.</returns>
     [HttpPut("/Developers/{IdentGuid}")]
     [ProducesResponseType(typeof(DeveloperModel), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -112,6 +132,11 @@ public class DeveloperController : Controller
         }
     }
 
+    /// <summary>
+    /// Remove developer from registry.
+    /// </summary>
+    /// <param name="IdentGuid">Developer's identity Guid.</param>
+    /// <returns>Http 200 (Ok).</returns>
     [HttpDelete("/Developers/{IdentGuid}")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]

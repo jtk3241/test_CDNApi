@@ -45,8 +45,18 @@ public partial class DataAccess : IDataAccess
 
     public async Task<List<DeveloperCore>?> GetDeveloperList(int PageSize = 100, int PageNumber = 0)
     {
-        var results = await _context.TDevelopers
-            .Select(x => new DeveloperCore
+        var query = from td in _context.TDevelopers
+                    orderby td.Name
+                    select td;
+        var records = await query
+            .Skip(PageNumber * PageSize)
+            .Take(PageSize)
+            .AsNoTracking()
+            .ToListAsync();
+
+        if (records != null && records.Any())
+        {
+            return records.Select(x => new DeveloperCore()
             {
                 Id = Convert.ToInt64(x.Id),
                 IdentGuid = x.Identguid,
@@ -56,13 +66,9 @@ public partial class DataAccess : IDataAccess
                 Hobby = x.Hobby,
                 SkillSet = x.Skillset,
                 UpdatedOn = x.Updatedon
-            })
-            .OrderBy(y => y.Name)
-            .Skip(PageNumber * PageSize)
-            .Take(PageSize)
-            .AsNoTracking()
-            .ToListAsync();
-        return results;
+            }).ToList();
+        }
+        return null;
     }
 
     public async Task<bool> CheckDeveloperIdentGuid(Guid identGuid)
