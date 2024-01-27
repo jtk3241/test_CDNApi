@@ -54,17 +54,36 @@ public partial class DataAccess : IDataAccess
                 Email = x.Email,
                 PhoneNumber = x.Phonenumber,
                 Hobby = x.Hobby,
-                SkillSet = x.Skillset
+                SkillSet = x.Skillset,
+                UpdatedOn = x.Updatedon
             })
             .AsNoTracking()
             .ToListAsync();
         return results;
     }
 
+    public async Task<bool> CheckDeveloperIdentGuid(Guid identGuid)
+    {
+        var bResult = await _context.TDevelopers
+            .AnyAsync(x => x.Identguid == identGuid);
+        return bResult;
+    }
+
     public async Task<bool> CheckDeveloperEmailExists(string email)
     {
         var bResult = await _context.TDevelopers
             .Where(x => x.Email.ToLower() == email.ToLower())
+            .AnyAsync();
+        return bResult;
+    }
+
+    public async Task<bool> CheckDeveloperEmailExists(Guid identGuid, string email)
+    {
+        var bResult = await _context.TDevelopers
+            .Where(x =>
+                x.Identguid != identGuid
+                && x.Email.ToLower() == email.ToLower()
+            )
             .AnyAsync();
         return bResult;
     }
@@ -91,5 +110,45 @@ public partial class DataAccess : IDataAccess
         developer.UpdatedOn = objNewDev.Updatedon;
 
         return developer;
+    }
+
+    public async Task<DeveloperCore> UpdateDeveloper(DeveloperCore developer)
+    {
+        var objDev = await _context.TDevelopers.FirstOrDefaultAsync(x => x.Identguid == developer.IdentGuid);
+        if (objDev == null) 
+        {
+            throw new ArgumentException($"Developer record not found. IdentGuid:{developer.IdentGuid}");
+        }
+
+        //*** update fields
+        if (!string.Equals(objDev.Name, developer.Name)
+            || string.Equals(objDev.Email, developer.Email)
+            || string.Equals(objDev.Phonenumber, developer.PhoneNumber)
+            || string.Equals(objDev.Hobby, developer.Hobby)
+            || string.Equals(objDev.Skillset, developer.SkillSet)
+            )
+        {
+            objDev.Name = developer.Name;
+            objDev.Email = developer.Email;
+            objDev.Phonenumber = developer.PhoneNumber;
+            objDev.Hobby = developer.Hobby;
+            objDev.Skillset = developer.SkillSet;
+            objDev.Updatedon = DateTime.Now;
+            await _context.SaveChangesAsync();
+        }
+        developer.UpdatedOn = objDev.Updatedon;
+        return developer;
+    }
+
+    public async Task DeleteDeveloper(Guid identGuid)
+    {
+        var objDev = await _context.TDevelopers.FirstOrDefaultAsync(x => x.Identguid == identGuid);
+        if (objDev == null)
+        {
+            throw new ArgumentException($"Developer record not found. IdentGuid:{identGuid}");
+        }
+
+        _context.TDevelopers.Remove(objDev);
+        await _context.SaveChangesAsync();
     }
 }

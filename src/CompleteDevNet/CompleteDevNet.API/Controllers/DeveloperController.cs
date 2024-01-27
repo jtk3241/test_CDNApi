@@ -22,6 +22,7 @@ public class DeveloperController : Controller
         _developerService = developerService;
     }
 
+    [AllowAnonymous]
     [HttpGet("/Developers")]
     [ProducesResponseType(typeof(List<DeveloperModel>), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -70,4 +71,38 @@ public class DeveloperController : Controller
             return TypedResults.BadRequest(problemDetails);
         }
     }
+
+    [HttpPut("/Developers/{IdentGuid}")]
+    [ProducesResponseType(typeof(DeveloperModel), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    public async Task<Results<Ok<DeveloperModel>, BadRequest<ValidationProblemDetails>, UnprocessableEntity<string>>> UpdateDeveloper(Guid IdentGuid, DeveloperNewModel developer)
+    {
+        var objInput = DeveloperNewModel.ToCore(developer);
+        objInput.IdentGuid = IdentGuid;
+        //*** simple validations
+        try
+        {
+            var objResult = await _developerService.UpdateDeveloper(objInput);
+            if (objResult != null)
+            {
+                var objReturn = DeveloperModel.From(objResult);
+                return TypedResults.Ok(objReturn);
+            }
+            else
+            {
+                return TypedResults.UnprocessableEntity("No records processed.");
+            }
+        }
+        catch (ArgumentException ex)
+        {
+            ModelState.AddModelError("Processing Error", $"{ex.Message}");
+            var problemDetails = new ValidationProblemDetails(ModelState)
+            {
+                Status = StatusCodes.Status400BadRequest,
+            };
+            problemDetails.Extensions["traceId"] = System.Diagnostics.Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            return TypedResults.BadRequest(problemDetails);
+        }
+    }
+
 }

@@ -56,4 +56,41 @@ public class DeveloperService : IDeveloperService
         _logger.Debug($"RegisterDeveloper end. name:{developer.Name}, email:{developer.Email}.");
         return objReturn;
     }
+
+    public async Task<DeveloperCore?> UpdateDeveloper(DeveloperCore developer)
+    {
+        _logger.Debug($"UpdateDeveloper start. name:{developer.Name}, email:{developer.Email}.");
+        //*** validations
+        bool bIdentValid = await _dataAccess.CheckDeveloperIdentGuid(developer.IdentGuid);
+        if (!bIdentValid)
+        {
+            throw new ArgumentException("Invalid Developer ID.");
+        }
+
+        if (string.IsNullOrWhiteSpace(developer.Name))
+        {
+            throw new ArgumentException("Developer name cannot be blank.");
+        }
+
+        if (string.IsNullOrWhiteSpace(developer.Email))
+        {
+            throw new ArgumentException("Developer email cannot be blank.");
+        }
+
+        if (!CommonUtil.IsValidEmailAddress(developer.Email))
+        {
+            throw new ArgumentException("Developer email is invalid.");
+        }
+
+        bool bEmailExistsForOtherUsers = await _dataAccess.CheckDeveloperEmailExists(developer.IdentGuid, developer.Email);
+        if (bEmailExistsForOtherUsers)
+        {
+            throw new ArgumentException("Developer email is already used by another user.");
+        }
+
+        var objReturn = await _dataAccess.UpdateDeveloper(developer);
+
+        _logger.Debug($"UpdateDeveloper end. name:{developer.Name}, email:{developer.Email}.");
+        return objReturn;
+    }
 }

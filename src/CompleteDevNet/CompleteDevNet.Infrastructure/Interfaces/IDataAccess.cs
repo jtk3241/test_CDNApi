@@ -10,6 +10,10 @@ namespace CompleteDevNet.Infrastructure.Interfaces;
 public interface IDataAccess
 {
     Task<List<DeveloperCore>?> GetDeveloperList();
+    Task<bool> CheckDeveloperIdentGuid(Guid identGuid);
     Task<bool> CheckDeveloperEmailExists(string email);
+    Task<bool> CheckDeveloperEmailExists(Guid identGuid, string email);
     Task<DeveloperCore> AddDeveloper(DeveloperCore developer);
+    Task<DeveloperCore> UpdateDeveloper(DeveloperCore developer);
+    Task DeleteDeveloper(Guid identGuid);
 }

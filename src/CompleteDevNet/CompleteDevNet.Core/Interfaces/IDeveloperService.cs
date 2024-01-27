@@ -11,4 +11,5 @@ public interface IDeveloperService
 {
     Task<List<DeveloperCore>?> GetDeveloperList();
     Task<DeveloperCore?> RegisterDeveloper(DeveloperCore developer);
+    Task<DeveloperCore?> UpdateDeveloper(DeveloperCore developer);
 }
