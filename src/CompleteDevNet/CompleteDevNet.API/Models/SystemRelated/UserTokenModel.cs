@@ -15,11 +15,7 @@ public class UserTokenModel
     /// </summary>
     public string UserName { get; set; } = string.Empty;
     /// <summary>
-    /// 
-    /// </summary>
-    public TimeSpan Validaty { get; set; }
-    /// <summary>
-    /// URL to get refresh token
+    /// JWT string for refreshing main token
     /// </summary>
     public string RefreshToken { get; set; } = string.Empty;
     /// <summary>

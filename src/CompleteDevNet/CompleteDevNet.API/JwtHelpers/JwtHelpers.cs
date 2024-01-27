@@ -29,7 +29,6 @@ public static class JwtHelpers
         // Get secret key
         var key = System.Text.Encoding.ASCII.GetBytes(jwtSettings.IssuerSigningKey);
         Guid Id = Guid.Empty;
-        userToken.Validaty = model.ExpiredTime.TimeOfDay;
         userToken.ExpiredTime = model.ExpiredTime;
         var JWToken = new JwtSecurityToken(
             issuer: jwtSettings.ValidIssuer,
