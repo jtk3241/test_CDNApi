@@ -12,4 +12,5 @@ public interface IDeveloperService
     Task<List<DeveloperCore>?> GetDeveloperList(int PageSize = 100, int PageNumber = 0);
     Task<DeveloperCore?> RegisterDeveloper(DeveloperCore developer);
     Task<DeveloperCore?> UpdateDeveloper(DeveloperCore developer);
+    Task DeleteDeveloper(Guid identGuid);
 }

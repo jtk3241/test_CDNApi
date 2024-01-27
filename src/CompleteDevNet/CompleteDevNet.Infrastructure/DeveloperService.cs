@@ -93,4 +93,19 @@ public class DeveloperService : IDeveloperService
         _logger.Debug($"UpdateDeveloper end. name:{developer.Name}, email:{developer.Email}.");
         return objReturn;
     }
+
+    public async Task DeleteDeveloper(Guid identGuid)
+    {
+        _logger.Debug($"DeleteDeveloper start. identGuid:{identGuid}.");
+        //*** validations
+        bool bIdentValid = await _dataAccess.CheckDeveloperIdentGuid(identGuid);
+        if (!bIdentValid)
+        {
+            throw new ArgumentException("Invalid Developer ID.");
+        }
+
+        await _dataAccess.DeleteDeveloper(identGuid);
+
+        _logger.Debug($"DeleteDeveloper end. identGuid:{identGuid}.");
+    }
 }
