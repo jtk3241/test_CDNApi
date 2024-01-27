@@ -1,11 +1,13 @@
 using CompleteDevNet.API.Extensions;
 using CompleteDevNet.Core.Interfaces;
+using CompleteDevNet.Core.SystemRelated;
 using CompleteDevNet.Infrastructure;
+using CompleteDevNet.Infrastructure.DataOracle;
+using CompleteDevNet.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using NSwag;
 using NSwag.Generation.Processors.Security;
-using OpenApiSecurityScheme = NSwag.OpenApiSecurityScheme;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,10 +21,27 @@ var loggerConfig = new LoggerConfiguration()
 var logger = loggerConfig.CreateLogger();
 builder.Services.AddSingleton<Serilog.ILogger>(logger);
 
+builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DatabaseSettings"));
+var databaseSettings = new DatabaseSettings();
+builder.Configuration.GetSection("DatabaseSettings").Bind(databaseSettings);
+
+if (databaseSettings.DatabaseProvider.ToLower() == "oracle")
+{
+    builder.Services.AddTransient<IDatabaseService, OracleDatabaseService>();
+    builder.Services.AddDbContext<CDNContext>(c =>
+        c.UseOracle(builder.Configuration.GetConnectionString("OracleConnectionString"))
+    );
+    builder.Services.AddTransient<IDataAccess, CompleteDevNet.Infrastructure.DataOracle.DataAccess>();
+}
+else if (databaseSettings.DatabaseProvider.ToLower() == "sql")
+{
+
+}
+
 builder.Services.AddControllers();
 
 builder.Services.AddTransient<IAccountService, AccountService>();
-builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IDeveloperService, DeveloperService>();
 
 builder.Services.AddJWTTokenServices(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();

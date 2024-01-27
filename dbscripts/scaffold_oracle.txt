@@ -1,0 +1,1 @@
+Scaffold-DbContext "User ID=TPCDB;Password=TPCDB;Data Source=LOCALHOST:1521/ORCL19C" Oracle.EntityFrameworkCore -OutputDir DataOracle -t T_DEVELOPER -f

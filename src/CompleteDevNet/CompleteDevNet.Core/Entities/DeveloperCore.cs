@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CompleteDevNet.Core.Entities
 {
-    public class UserCore
+    public class DeveloperCore
     {
         public long Id { get; set; }
         public Guid IdentGuid { get; set; }

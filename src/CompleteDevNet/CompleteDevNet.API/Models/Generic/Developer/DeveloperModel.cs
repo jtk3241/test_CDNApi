@@ -2,7 +2,7 @@
 
 namespace CompleteDevNet.API.Models;
 
-public class UserModel
+public class DeveloperModel
 {
     public Guid IdentGuid { get; set; }
     public string Name { get; set; } = null!;
@@ -11,9 +11,9 @@ public class UserModel
     public string? SkillSet { get; set; }
     public string? Hobby { get; set; }
 
-    public static UserModel From(UserCore model)
+    public static DeveloperModel From(DeveloperCore model)
     {
-        var objReturn = new UserModel()
+        var objReturn = new DeveloperModel()
         {
             Email = model.Email,
             PhoneNumber = model.PhoneNumber,
@@ -25,9 +25,9 @@ public class UserModel
         return objReturn;
     }
 
-    public static UserCore ToCore(UserModel model)
+    public static DeveloperCore ToCore(DeveloperModel model)
     {
-        var objReturn = new UserCore()
+        var objReturn = new DeveloperCore()
         {
             Email = model.Email,
             PhoneNumber = model.PhoneNumber,
