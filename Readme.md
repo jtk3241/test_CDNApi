@@ -7,7 +7,8 @@ Key concepts in use:
 - Simple method of separating data-access table-models by database type.
 - Use of Json web tokens (JWT) for authentication.
 - Use of service-extensions / middleware code to create a standardized exception message for user, and provide easy reference for developers/support-staff in log files when users report an issue.
-- Unit-tests for data access layers. Can be used in continuous-integration (CI) pipelines as a prerequisite for completing a build.
+- Unit-tests for data access layers. Can be used in continuous-integration (CI) pipelines as a prerequisite for completing a build, before being sent to the release pipeline (continuous-deployment, CD).
+-- This serves as a development team checkpoint before it passes to the testing team.
 - Documentation within API application which is available for end-users (via Swagger).
 
 ## Built with
